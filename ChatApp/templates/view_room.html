@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Chat App</title>
+
+    <style>
+    .container {
+        display: flex;
+        justify-content: center;
+      }
+      .center {
+        width: 1000px;
+      }
+      .vertical-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      h3
+      {
+        color: dodgerblue;
+      }
+    </style>
+    <style>
+        .blink {
+          animation: blinker 10s linear infinite;
+          color: #1c87c9;
+          font-size: 30px;
+          font-weight: bold;
+          font-family: sans-serif;
+        }
+        @keyframes blinker {
+          50% {
+            opacity: 0;
+          }
+        }
+      input[type=text] {
+        background-color:cornsilk;
+        color:dodgerblue;
+        font-family:verdana;
+        font-size:20px;
+        border-block-start-color:rgb(165, 240, 178);
+        border-block-end-color:rgb(152, 194, 204);
+        border-left-color:rgb(165, 240, 178) ;
+        border-right-color:rgb(152, 194, 204) ;
+        border-width: thick;
+      }
+      input[type=email] {
+        background-color:  cornsilk;
+        color: dodgerblue;
+        font-family:verdana;
+        border-block-start-color:rgb(165, 240, 178);
+        border-block-end-color:rgb(152, 194, 204);
+        border-left-color:rgb(165, 240, 178) ;
+        border-right-color:rgb(152, 194, 204) ;
+        border-width: thick;
+        font-size:20px;
+      }
+      input[type=password] {
+        background-color: cornsilk;
+        color:dodgerblue;
+        font-family:verdana;
+        border-block-start-color:rgb(165, 240, 178);
+        border-block-end-color:rgb(152, 194, 204);
+        border-left-color:rgb(165, 240, 178) ;
+        border-right-color:rgb(152, 194, 204) ;
+        border-width: thick;
+        font-size:20px;
+      }
+      input[type=submit]
+      {
+        background-color: rgb(33, 134, 218);
+        color:wheat;
+        font-family:verdana;
+        font-size:20px;
+        width: 200px;
+        height:40px;
+      }
+      h2 {
+        color: dodgerblue;
+      }
+      h1{
+          color:dodgerblue;
+      }
+      label{
+          color: dodgerblue;
+          font-family: "Arial Black";
+          font-style:oblique;
+          font-size: medium;
+      }
+    </style>
+</head>
+<body style="background-image:url(/static/loginback.jpg)">
+<div class="container">
+         <div class="center">
+        <div class="vertical-center">
+            <h1>Welcome to chat room: </h1>
+            <br>
+        </div>
+         </div>
+</div>
+<div class="container">
+         <div class="center">
+        <div class="vertical-center">
+            <h1>{{ room.name }}</h1>
+        </div>
+         </div>
+</div>
+<div class="container">
+         <div class="center">
+        <div class="vertical-center">
+{#            <h1>display data{%current_user.is_room_admin%}</h1>#}
+<form id="message_input_form">
+    <input type="text" id="message_input" placeholder="Enter your message here">
+    <br>
+    <br>
+    <div class="vertical-center">
+    <input type="submit" value="Send Message">
+    </div>
+</form>
+        </div>
+         </div>
+</div>
+<div class="container">
+         <div class="center">
+        <div class="vertical-center">
+<h3>Members</h3>
+        </div>
+         </div>
+</div>
+<div class="container">
+         <div class="center">
+        <div class="vertical-center">
+<ul>
+    {% for member in room_members %}
+        <li>{{ member._id.username }}</li>
+    {% endfor %}
+</ul>
+        </div>
+         </div>
+</div>
+<div class="container">
+         <div class="center">
+        <div class="vertical-center">
+<input type="submit" id="load_older_messages_btn" value="Log Details">
+        </div>
+         </div>
+</div>
+<div class="container">
+         <div class="center">
+        <div class="vertical-center">
+<div id="messages">
+    {% for message in messages %}
+        <div><b>{{ message.sender }}&nbsp;[{{ message.created_at }}]:&nbsp;</b> {{ message.text }}</div>
+    {% endfor %}
+</div>
+        </div>
+         </div>
+</div>
+
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<script>
+    const socket = io.connect("http://127.0.0.1:5000");
+
+    socket.on('connect', function () {
+        socket.emit('join_room', {
+            username: "{{ username }}",
+            room: "{{ room._id }}"
+        });
+
+        let message_input = document.getElementById('message_input');
+
+        document.getElementById('message_input_form').onsubmit = function (e) {
+            e.preventDefault();
+            let message = message_input.value.trim();
+            if (message.length) {
+                socket.emit('send_message', {
+                    username: "{{ username }}",
+                    room: "{{ room._id }}",
+                    message: message
+                })
+            }
+            message_input.value = '';
+            message_input.focus();
+        }
+    });
+
+    let page = 0;
+
+    document.getElementById("load_older_messages_btn").onclick = (e) => {
+        page += 1;
+        fetch("/rooms/{{ room._id }}/messages?page=" + page, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            response.json().then(messages => {
+                messages.reverse().forEach(message => prepend_message(message.text, message.sender, message.created_at));
+            })
+        })
+    };
+
+    function prepend_message(message, username, created_at) {
+        const newNode = document.createElement('div');
+        newNode.innerHTML = `<b>${username}&nbsp;[${created_at}]:&nbsp;</b> ${message}`;
+        const messages_div = document.getElementById('messages');
+        messages_div.insertBefore(newNode, messages_div.firstChild);
+    }
+
+    window.onbeforeunload = function () {
+        socket.emit('leave_room', {
+            username: "{{ username }}",
+            room: "{{ room._id }}"
+        })
+    };
+
+    socket.on('receive_message', function (data) {
+        console.log(data);
+        const newNode = document.createElement('div');
+        newNode.innerHTML = `<b>${data.username}&nbsp;[${data.created_at}]:&nbsp;</b> ${data.message}`;
+        document.getElementById('messages').appendChild(newNode);
+    });
+
+    socket.on('join_room_announcement', function (data) {
+        console.log(data);
+        if (data.username !== "{{ username }}") {
+            const newNode = document.createElement('div');
+            newNode.innerHTML = `<b>${data.username}</b> has joined the room`;
+            document.getElementById('messages').appendChild(newNode);
+        }
+    });
+
+    socket.on('leave_room_announcement', function (data) {
+        console.log(data);
+        const newNode = document.createElement('div');
+        newNode.innerHTML = `<b>${data.username}</b> has left the room`;
+        document.getElementById('messages').appendChild(newNode);
+    });
+</script>
+</html>

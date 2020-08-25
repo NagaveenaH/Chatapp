@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Chat App</title>
+
+    <style>
+    .container {
+        display: flex;
+        justify-content: center;
+      }
+      .center {
+        width: 1000px;
+      }
+      .vertical-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      h3
+      {
+        width: 400px;
+        border-block-start-color:rgb(165, 240, 178);
+        border-block-end-color:rgb(152, 194, 204);
+        border-left-color:rgb(165, 240, 178) ;
+        border-right-color:rgb(152, 194, 204) ;
+        border-width: thick;
+        background-color:red;
+      }
+    </style>
+    <style>
+        .blink {
+          animation: blinker 10s linear infinite;
+          color: #1c87c9;
+          font-size: 30px;
+          font-weight: bold;
+          font-family: sans-serif;
+        }
+        @keyframes blinker {
+          50% {
+            opacity: 0;
+          }
+        }
+      input[type=text] {
+        background-color:cornsilk;
+        color:darkcyan;
+        font-family:verdana;
+        font-size:20px;
+        border-block-start-color:rgb(165, 240, 178);
+        border-block-end-color:rgb(152, 194, 204);
+        border-left-color:rgb(165, 240, 178) ;
+        border-right-color:rgb(152, 194, 204) ;
+        border-width: thick;
+      }
+      input[type=email] {
+        background-color:  cornsilk;
+        color: darkcyan;
+        font-family:verdana;
+        border-block-start-color:rgb(165, 240, 178);
+        border-block-end-color:rgb(152, 194, 204);
+        border-left-color:rgb(165, 240, 178) ;
+        border-right-color:rgb(152, 194, 204) ;
+        border-width: thick;
+        font-size:20px;
+      }
+      input[type=password] {
+        background-color: cornsilk;
+        color:darkcyan;
+        font-family:verdana;
+        border-block-start-color:rgb(165, 240, 178);
+        border-block-end-color:rgb(152, 194, 204);
+        border-left-color:rgb(165, 240, 178) ;
+        border-right-color:rgb(152, 194, 204) ;
+        border-width: thick;
+        font-size:20px;
+      }
+      input[type=submit]
+      {
+        background-color: rgb(33, 134, 218);
+        color:wheat;
+        font-family:verdana;
+        font-size:20px;
+        width: 100px;
+        height:40px;
+      }
+      h2 {
+        color: rgb(33, 134, 218);
+      }
+      h1{
+          color:rgb(33, 134, 218);
+      }
+      label{
+          color: rgb(33, 134, 218);
+          font-family: "Arial Black";
+          font-style:oblique;
+          font-size: medium;
+      }
+    </style>
+</head>
+<body style="background-image:url(/static/loginback.jpg)">
+<div class="container">
+ <div class="center">
+        <div class="vertical-center">
+    <h2>Welcome to ChatRoom App</h2>
+</div>
+ </div>
+</div>
+    <div>
+        <br>
+    </div>
+    <div class="container">
+         <div class="center">
+        <div class="vertical-center">
+<h1>Login</h1>
+    </div>
+         </div>
+    </div>
+    <div>
+        <h3>{{ message }}</h3>
+    </div>
+    <div class="container">
+         <div class="center">
+        <div class="vertical-center">
+<form method="post" action="/login">
+    <label>Username:</label>
+    <br>
+    <input type="text" name="username">
+    <br>
+    <br>
+    <label>Password:</label>
+    <br>
+    <input type="password" name="password">
+    <br>
+    <br>
+    <div class="vertical-center">
+    <input type="submit" value="Login">
+</div>
+</form>
+        </div>
+         </div>
+        </div>
+    </div>
+</body>
+</html>

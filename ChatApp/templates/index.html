@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Chat App</title>
+
+    <style>
+    .container {
+        display: flex;
+        justify-content: center;
+      }
+      .center {
+        width: 1000px;
+      }
+      .vertical-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      h3
+      {
+        color:dodgerblue;
+          font-family: "Arial Black";
+          font-style:oblique;
+          font-size: medium;
+      }
+    </style>
+    <style>
+        .blink {
+          animation: blinker 10s linear infinite;
+          color: #1c87c9;
+          font-size: 30px;
+          font-weight: bold;
+          font-family: sans-serif;
+        }
+        @keyframes blinker {
+          50% {
+            opacity: 0;
+          }
+        }
+      input[type=text] {
+        background-color:cornsilk;
+        color:darkcyan;
+        font-family:verdana;
+        font-size:20px;
+        border-block-start-color:rgb(165, 240, 178);
+        border-block-end-color:rgb(152, 194, 204);
+        border-left-color:rgb(165, 240, 178) ;
+        border-right-color:rgb(152, 194, 204) ;
+        border-width: thick;
+      }
+      input[type=email] {
+        background-color:  cornsilk;
+        color: darkcyan;
+        font-family:verdana;
+        border-block-start-color:rgb(165, 240, 178);
+        border-block-end-color:rgb(152, 194, 204);
+        border-left-color:rgb(165, 240, 178) ;
+        border-right-color:rgb(152, 194, 204) ;
+        border-width: thick;
+        font-size:20px;
+      }
+      input[type=password] {
+        background-color: cornsilk;
+        color:darkcyan;
+        font-family:verdana;
+        border-block-start-color:rgb(165, 240, 178);
+        border-block-end-color:rgb(152, 194, 204);
+        border-left-color:rgb(165, 240, 178) ;
+        border-right-color:rgb(152, 194, 204) ;
+        border-width: thick;
+        font-size:20px;
+      }
+      input[type=submit]
+      {
+        background-color: rgb(33, 134, 218);
+        color:wheat;
+        font-family:verdana;
+        font-size:20px;
+        width: 100px;
+        height:40px;
+      }
+      h2 {
+         color:dodgerblue;
+      }
+      h1{
+           color:dodgerblue;
+      }
+    </style>
+</head>
+<body style="background-image:url(/static/loginback.jpg)">
+<div class="container">
+<h1 class="blink">My Chat App</h1>
+</div>
+<div class="container">
+<h3>This is {% if current_user.is_authenticated %}{{ current_user.username }}
+Room<br>
+    <br>
+{% else %}Guest Login To Use Chat App
+    <br>
+    <br>
+    <a href="login">Click Here to Login</a>
+    <br>
+    <br>
+    <a href="signup">Click Here To Create Account</a>
+    {% endif %}
+</h3>
+<h1>{% if current_user.is_authenticated %}</h1>
+    <ul>
+     {% for room in rooms %}
+           <a href="/rooms/{{ room._id.room_id }}">{{ room.room_name }}</a>
+        {% endfor %}
+    </ul>
+{% endif %}
+</div>
+</body>
+</html>
